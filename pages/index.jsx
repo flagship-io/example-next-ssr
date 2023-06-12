@@ -47,13 +47,13 @@ export async function getServerSideProps(context) {
   const { res, req } = context;
 
   //Start the Flagship SDK
-  const flagship = Flagship.start(
-    process.env.NEXT_PUBLIC_ENV_ID,
-    process.env.NEXT_PUBLIC_API_KEY,
-    {
-      fetchNow: false,
-    }
-  );
+  // const flagship = Flagship.start(
+  //   process.env.NEXT_PUBLIC_ENV_ID,
+  //   process.env.NEXT_PUBLIC_API_KEY,
+  //   {
+  //     fetchNow: false,
+  //   }
+  // );
 
   //Get visitorId from cookies if exists
   const fs_visitorID_cookie = req.cookies["fs_visitorID_cookie"];
@@ -66,7 +66,7 @@ export async function getServerSideProps(context) {
   };
 
   // Create a new visitor
-  const visitor = flagship.newVisitor({
+  const visitor = Flagship.newVisitor({
     visitorId: initialVisitorData.id,
     context: initialVisitorData.context,
   });
