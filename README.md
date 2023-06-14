@@ -1,4 +1,4 @@
-# Example of Flagship implementation in Next.js 13
+# Example of Flagship implementation in Next.js
 
 [Example documentation](https://docs.developers.flagship.io/docs/avoid-flickering-with-nextjs-ssr)
 
