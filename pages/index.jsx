@@ -1,5 +1,6 @@
-//pages/index.jsx
+// pages/index.jsx
 
+// Importing required modules from the Flagship React SDK
 import {
   useFsFlag,
   useFlagship,
@@ -9,12 +10,15 @@ import {
 } from "@flagship.io/react-sdk";
 import styles from "../styles/Home.module.css";
 
+// Home page component
 export default function Home() {
+  // Get the Flagship instance
   const fs = useFlagship();
 
-  //get flag
+  // Get the value of the 'my_flag_key' flag
   const myFlag = useFsFlag("my_flag_key", "default-value");
 
+  // Function to send a hit to Flagship
   const onSendHitClick = () => {
     fs.hit.send({
       type: HitType.EVENT,
@@ -46,35 +50,27 @@ export default function Home() {
 export async function getServerSideProps(context) {
   const { res, req } = context;
 
-  //Start the Flagship SDK
-  const flagship = Flagship.start(
-    process.env.NEXT_PUBLIC_ENV_ID,
-    process.env.NEXT_PUBLIC_API_KEY,
-    {
-      fetchNow: false,
-    }
-  );
-
-  //Get visitorId from cookies if exists
+  // Get the visitor ID from the 'fs_visitorID_cookie' cookie if it exists
   const fs_visitorID_cookie = req.cookies["fs_visitorID_cookie"];
 
+  // Define initial visitor data
   const initialVisitorData = {
-    id: fs_visitorID_cookie, // if not exists the SDK will generate one
+    id: fs_visitorID_cookie, // If the cookie does not exist, the SDK will generate a new visitor ID
     context: {
       any: "value",
     },
   };
 
-  // Create a new visitor
-  const visitor = flagship.newVisitor({
+  // Create a new visitor using the initial visitor data
+  const visitor = Flagship.newVisitor({
     visitorId: initialVisitorData.id,
     context: initialVisitorData.context,
   });
 
-  // //Fetch flags
+  // Fetch flags for the visitor
   await visitor.fetchFlags();
 
-  //set cookie fs_visitorID_cookie
+  // Set the 'fs_visitorID_cookie' cookie with the visitor ID
   res.setHeader("Set-Cookie", `fs_visitorID_cookie=${visitor.visitorId}`);
 
   // Pass data to the page via props
