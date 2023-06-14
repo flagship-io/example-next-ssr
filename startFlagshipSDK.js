@@ -10,7 +10,7 @@ function startFlagshipSDK() {
     // Start the Flagship SDK with the provided environment ID and API key
     Flagship.start(process.env.NEXT_PUBLIC_ENV_ID, process.env.NEXT_PUBLIC_API_KEY, {
         fetchNow: false, // Do not fetch flags immediately
-        decisionMode: DecisionMode.BUCKETING // set decision mode : DECISION_API or BUCKETING
+        decisionMode: DecisionMode.DECISION_API // set decision mode : DECISION_API or BUCKETING
     });
 }
 
