@@ -1,5 +1,5 @@
 // Importing the startFlagshipSDK function from the startFlagshipSDK module
-const startFlagshipSDK = require('./startFlagshipSDK');
+const { startFlagshipSDK } = require('./startFlagshipSDK');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

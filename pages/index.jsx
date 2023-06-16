@@ -4,11 +4,11 @@
 import {
   useFsFlag,
   useFlagship,
-  Flagship,
   HitType,
   EventCategory,
 } from "@flagship.io/react-sdk";
 import styles from "../styles/Home.module.css";
+import { startFlagshipSDKAsync } from "../startFlagshipSDK"; // Importing startFlagshipSDKAsync function
 
 // Home page component
 export default function Home() {
@@ -61,8 +61,11 @@ export async function getServerSideProps(context) {
     },
   };
 
+  // start the SDK et get the Flagship instance
+  const flagship = await startFlagshipSDKAsync();
+
   // Create a new visitor using the initial visitor data
-  const visitor = Flagship.newVisitor({
+  const visitor = flagship.newVisitor({
     visitorId: initialVisitorData.id,
     context: initialVisitorData.context,
   });
