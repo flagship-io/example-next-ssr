@@ -4,11 +4,11 @@
 import {
   useFsFlag,
   useFlagship,
-  Flagship,
   HitType,
   EventCategory,
 } from "@flagship.io/react-sdk";
 import styles from "../styles/Home.module.css";
+import { startFlagshipSDKAsync } from "../startFlagshipSDK"; // Importing startFlagshipSDKAsync function
 
 // Home page component
 export default function Home() {
@@ -16,11 +16,11 @@ export default function Home() {
   const fs = useFlagship();
 
   // Get the value of the 'my_flag_key' flag
-  const myFlag = useFsFlag("my_flag_key", "default-value");
+  const myFlag = useFsFlag("my_flag_key").getValue("default-value")
 
   // Function to send a hit to Flagship
   const onSendHitClick = () => {
-    fs.hit.send({
+    fs.sendHits({
       type: HitType.EVENT,
       category: EventCategory.ACTION_TRACKING,
       action: "click button",
@@ -32,7 +32,7 @@ export default function Home() {
       <main className={styles.main}>
         <h1>Next ServerSide Rendering Integration With Flagship [SSR]</h1>
         <p>flag key: my_flag_key</p>
-        <p>flag value: {myFlag.getValue()}</p>
+        <p>flag value: {myFlag}</p>
         <button
           style={{ width: 100, height: 50 }}
           onClick={() => {
@@ -59,12 +59,17 @@ export async function getServerSideProps(context) {
     context: {
       any: "value",
     },
+    hasConsented: true,
   };
 
+  // start the SDK et get the Flagship instance
+  const flagship = await startFlagshipSDKAsync();
+
   // Create a new visitor using the initial visitor data
-  const visitor = Flagship.newVisitor({
+  const visitor = flagship.newVisitor({
     visitorId: initialVisitorData.id,
     context: initialVisitorData.context,
+    hasConsented: initialVisitorData.hasConsented,
   });
 
   // Fetch flags for the visitor
@@ -76,7 +81,7 @@ export async function getServerSideProps(context) {
   // Pass data to the page via props
   return {
     props: {
-      initialFlagsData: visitor.getFlagsDataArray(),
+      initialFlagsData: visitor.getFlags().toJSON(),
       initialVisitorData: {
         ...initialVisitorData,
         id: visitor.visitorId,
